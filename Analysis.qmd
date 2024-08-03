@@ -1,0 +1,323 @@
+---
+editor: visual
+title: "How does a Bike Share Navigate a Speedy Success"
+format: html
+execute: 
+  echo: false
+  warning: false
+---
+
+```{r}
+#| label: library-calls
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(lubridate)
+library(hms)
+library(gridExtra)
+```
+
+## **Problem in Question: Maximizing Annual Membership**
+
+In 2016, Cyclistic launched a successful bike-share offering. Since then, the program has grown to a fleet of 5,824 bicycles that are geotracked and locked into a network of 692 stations across Chicago. The bikes can be unlocked from one station and returned to any other station in the system anytime.
+
+Cyclistic has two types of customers:
+
+-   Customers with single ride or full-day passes (Casual Riders)
+
+-   Customers with annual memberships (Annual Membership holders)
+
+**Strategy**: Rather than creating a marketing campaign that targets all-new customers, Lily Moreno (marketing manager at Cycliistic) believes there is a very good chance to convert casual riders into members.
+
+**Task to meet the desired goal:**
+
+1.  understanding how annual members and casual riders differ
+
+2.  why casual riders would buy a membership
+
+3.  how digital media could affect their marketing tactics
+
+## **About Data**
+
+For the purpose of this case study, the datasets are appropriate and will enable us to answer the business questions. The data has been made available by Motivate International Inc.
+
+You can download the data using this link [Cyclistic Data](https://divvy-tripdata.s3.amazonaws.com/index.html)
+
+This is a public data that we can use to explore how different customer types are using Cyclistic bikes. But note that data-privacy issues prohibit us from using riders’ personally identifiable information. This means that we won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.
+
+@tbl-cyclistic-data depicts the cyclistic data with 13 columns as:
+
+1.  ride_id
+2.  rideable_type
+3.  started_at (time the ride started at)
+4.  end_at (time the ride finished at)
+5.  start_station_name
+6.  end_station_name
+7.  start_station_id
+8.  end_station_id
+9.  start_lat (latitude coordinated of starting bike location)
+10. start_lng (longitude coordinated of starting bike location)
+11. end_lat (latitude coordinated of the final location of bike)
+12. end_lng (longitude coordinate of the final location of bike)
+13. member_casual (shows two types of bike users: members and casual)
+
+```{r}
+#| label: tbl-cyclistic-data
+#| tbl-cap: "Cyclistic Dataset (Quarter 1, 2020)"
+cyclistic_2020 = read_csv("Divvy_Trips_2020_Q1.csv")
+head(cyclistic_2020)
+
+```
+
+## **Preprocessing and Transforming**
+
+Overall, data seems to be cleaned having columns appropriately named but datatypes for some columns need to be redefined to perform smooth calculations.
+
+Before continuing with our dataset, lets do some cleaning. Though the cleaning process can be performed in-situ, it is advisable to check for any null enteries or anomaly in the dataset.
+
+The code chunk below format the column names and data types into appropriately to ease in furthur calculations. Moreover, there were 4 null enteries detected that were removed from the table and the final cleaned table is @tbl-cleaned. Also you can observe that data types of different columns has been changed.
+
+```{r}
+#| label: cyclistic-trnasformed
+#| tbl-cap: "Cleaned Dataset"
+#| echo: true
+cyclistic_2020_transformed = cyclistic_2020 |> mutate(
+  rideable_type = as.factor(rideable_type),
+  member_type = as.factor(member_casual),
+  start_station_id = as.numeric(start_station_id),
+  end_station_id = as.numeric(end_station_id),
+  start_lat = as.numeric(start_lat),
+  start_lng = as.numeric(start_lng),
+  end_lat = as.numeric(end_lat),
+  end_lng = as.numeric(end_lng),
+  start_station_name = as.character(start_station_name),
+  end_station_name = as.character(end_station_name)
+  
+)
+
+```
+
+```{r}
+#| label: tbl-cleaned
+#| tbl-cap: "Cleaned and Transformed Data"
+#| echo: true
+sum(is.na(cyclistic_2020_transformed))
+
+# So, we have found 4 null values - lets get rid of them
+
+cleaned_df = cyclistic_2020_transformed |> drop_na()
+cleaned_df
+```
+
+## **Analysis**
+
+### Calculated Columns
+
+Now, the data has been cleaned and in proper shape, it is time to get insights of it. First of all, tow additional columns (**ride_length and day_of_week**) will be calculated and then further analysis and summary statistics will be acquired using these two columns. Insights from these two columns will help us understand how different members use bikes differntly and how to strategize marketing.
+
+```{r}
+#| echo: true
+day_mapping <- c(
+  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+)
+
+df_cyclistic <- cleaned_df |>
+  mutate(
+    ride_length = hms::as_hms(ended_at - started_at),
+    day_of_week = day_mapping[wday(started_at)]
+    
+  )
+```
+
+```{r}
+head(df_cyclistic$ride_length)
+```
+
+```{r}
+head(df_cyclistic$day_of_week)
+```
+
+### Ride Behavior of Users
+
+In @tbl-summary-stat, It can be clearly observed from the mean (ride_length) for both user types that the avg. ride duration of a member is 12 minutes. On the other hand, the avg. ride time of a casual user is 1 hr 35 min. Surely, members are daily commuters and casual riders would use the bikes for specific purpose.
+
+Also, casual riders ride duration is surprisingly quite high (2607 hr or 108 days), while the maximum ride duration for member has been recorded is 1563 hr/65 days.
+
+```{r}
+#| label: tbl-summary-stat
+#| tbl-cap: "Average Ride Length of Users"
+#| echo: true
+df_new <- df_cyclistic %>%
+  group_by(member_casual) %>%
+  summarise(
+    average_ride_length = as_hms(mean(ride_length,)),
+    max_ride_length = as_hms(max(ride_length)) # divide by 24 to convert into days
+  ) %>%
+  ungroup()
+
+df_new
+```
+
+```{r}
+#| label: tbl-weekly
+#| tbl-cap: "Weekly Ride Trends"
+#| echo: true
+df_m <- df_cyclistic %>%
+  group_by(day_of_week, member_casual) %>%
+  summarize(mean_ride_length = as_hms(mean(ride_length))) %>%
+  arrange(desc(mean_ride_length))
+
+df_m
+```
+
+Above @tbl-weekly illustrates records the longest ride duration for casual riders Thursday and most of riders who have memberships rides longer on Sundays.
+
+The @fig-weekly-rides illustrates the distinct usage patterns of "Annual Members" and "Casual Riders" of a bike-sharing service across different days of the week. Annual members show a consistent usage pattern during weekdays, peaking on Wednesday, indicating a primary use for commuting and regular weekday activities, with a noticeable drop on Sunday. In contrast, casual riders demonstrate higher activity on weekends, particularly on Saturday, suggesting a preference for leisure or recreational use, with a surprisingly high number on Monday, possibly due to tourists or occasional riders. Both groups show moderate use on Fridays, potentially reflecting a mix of commuting and leisure activities. Overall, annual members consistently outnumber casual riders, highlighting the regularity of their usage compared to the more sporadic patterns of casual riders.
+
+```{r}
+#| label: fig-weekly-rides
+#| fig-cap: "No. of Rides on each day"
+df_counts <- df_cyclistic %>%
+  group_by(day_of_week, member_casual) %>%
+  summarize(count_ride_id = n(), .groups = 'drop') %>%
+  arrange(desc(count_ride_id))
+
+# Create separate DataFrames for 'Casual' and 'Member'
+df_casual <- df_counts %>% filter(member_casual == 'casual')
+df_member <- df_counts %>% filter(member_casual == 'member')
+
+# Plotting
+fig1 <- ggplot(df_member, aes(x = day_of_week, y = count_ride_id)) +
+  geom_bar(stat = 'identity', fill = 'blue') +
+  labs(title = 'Annual Members', x = 'Day of Week', y = 'No. of Riders') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+fig2 <- ggplot(df_casual, aes(x = day_of_week, y = count_ride_id)) +
+  geom_bar(stat = 'identity', fill = 'red') +
+  labs(title = 'Casual Riders', x = 'Day of Week', y = 'No. of Riders') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Combine the two plots side by side
+grid.arrange(fig1, fig2, ncol = 2)
+```
+
+While digging deep into the ride behavior of users, it was observed @tbl-frequent-rides that most casual riders start their journey from 'HQ QR' station and then back to the same station. On the other, annual members made most of their trips from Canal St & Adams st to Michigan Ave & Washington
+
+```{r}
+#| label: tbl-frequent-rides
+#| tbl-cap: "Most Frequent Rides"
+df_cyclistic <- df_cyclistic |>
+  mutate(trip_route = paste(start_station_name, 'to', end_station_name))
+
+# Group by member_type and find the most frequent trip_route
+most_frequent_routes <- df_cyclistic |>
+  group_by(member_casual) %>%
+  summarize(most_frequent_trip_route = trip_route |>
+              table() |>
+              which.max() |>
+              names(),
+            .groups = 'drop')
+
+# Join to get the frequency of each most frequent trip_route
+g <- df_cyclistic %>%
+  group_by(member_casual, trip_route) |>
+  tally(name = 'frequency') |>
+  right_join(most_frequent_routes, by = c('member_casual', 'trip_route' = 'most_frequent_trip_route')) |>
+  arrange(member_casual)
+
+# Print the result
+print(g)
+```
+
+Since we need to formulate a marketing strategy for casual riders and annual member, it is mandatory to see what is the size of these users.
+
+```{r}
+
+```
+
+```{r}
+#| label: fig-user-proportion
+#| fig-cap: "User Proportions of Cyclistic Members"
+prop <- df_cyclistic |>
+  count(member_casual) |>
+  mutate(proportion = n / sum(n),
+         label = paste0(member_casual, ": ", scales::percent(proportion)))
+
+
+ggplot(prop, aes(x = "", y = proportion, fill = member_casual)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  geom_text(aes(label = label), position = position_stack(vjust = 0.5)) +
+  labs(title = 'Proportions of Casual Riders and Membership Holders', x = NULL, y = NULL) +
+  scale_fill_manual(values = c('casual' = 'red', 'member' = 'blue')) +
+  theme_void() +
+  theme(legend.title = element_blank())
+```
+
+So, we can see that there are 89% (378407) of members subscribed to annual membership of cyclistic. On the other hand there are only 11% (48479) of casual riders we need to convince into subscribing for the memebrship.
+
+## Results and Discussions
+
+**Queastion 1: How casual riders use bikes differently from the members?**
+
+1.  It can be clearly observed from the **mean (ride_length)** for both user types that the avg. ride duration of a member is **12 minutes**. On the other hand, the avg. ride time of a casual user is **1 hr 35 min**.
+
+2.  Also, among the riders **who use the cyclistic the most** are casual riders with ride duration spanning **over days**. Among **first 50 users** who use the bikes more are casual riders.
+
+3.  The **longest ride duration** for casual riders are recorded on **Thursday**, while most of riders who have memberships rides longer on **Sundays**.
+
+4.  Saturday has the highest number of riders among casual riders, they might be using bikes for leisure activities. Monday shows a surprisingly high number of casual riders. Annual members are consistent throughought the week.
+
+5.  There is no significant difference between the **average distance** travelled by each category, but casual riders are taking the lead here, too, by approx. 1 Km.
+
+6.  It has been observed that the **HQ QR Station** was prominent among casual riders; about 3% (3764) of casual riders commute daily to and from this particular station. Annual members made most of their trips from **Canal St & Adams st to Michigan Ave & Washington**.
+
+**Question 2: Why would a casual rider convert to a member?**
+
+1.  **Casual riders** are just 11% of the total cyclistic users, yet they still ride more than the annual members; their **avg. ride duaration is 8 times** the avg. ride duration of membership holders. They are likely to buy the membership as per their frequecy of using bikes.
+
+2.  The **ride length** of a casual rider (at least first 50) spans over days with largest being **108 days**. They must be using **full-day passes**. One strategy to convert them into regular member is **put a cap on ride duration** for casual users for a day. To use the bike above this limit, they have to buy membership.
+
+3.  Most of the casual riders ride on Sunday. Company can provide **incentives or discounts** to regular members specifically on Sunday to allure the casual rider into buying membership. They will buy the membership for they are the ones who use bike the most on Sunday.
+
+4.  Lastly, it is observed that approx. 3% of the casual riders use the HQ QR station for daily commute. Cyclistic can target these specfic users **offering them special offers**.
+
+## Action: Marketing Strategy
+
+**Question 3: Digital marketing strategy raise annual subscriptions?**
+
+To convert existing casual riders, Cyclistic need to initialize a specific remarketing campaign tailored for casual riders only.
+
+-   First of all, the new **awareness campaign** should be launched via **e-mails**, **personal messages**, and **social media** informing the casual riders of benefits of being an annual members.
+
+-   Create **attractive ads** to post on social media listing **offers and incentives** if they convert into members.
+
+-   Second, inform the casual riders about the limit company is going to apply on time duration on full-day passes with invitation for them to subsribing into membership in order to **ride unlimited**.
+
+-   **Promotions and incentives** campaign specifically for riders who rides on Sunday. **Discounts for annual members on Sunday** to convince casual riders into having a membership.
+
+-   Focus marketing efforts for annual memberships during weekdays and highlight commuting benefits. Encourage casual riders with weekend promotions.
+
+-   Allocate more resources, such as bike availability and maintenance, on Wednesdays and weekends to meet demand peaks.
+
+-   Lastly, prepare a **detailed list of casual commuters who use HQ QR station** the most. Approach them with deals to convert them into members as they are already regular commuters.
+
+It is all remarketing campaign to make casual users aware of what perks they can enjoy if they get permoted to annual members. Moreover, marketing strategy need to be shifted from general awareness campaign to more specific.
+
+## References
+
+1.  R Core Team (2023). \_R: A Language and Environment for Statistical Computing\_. R Foundation for Statistical Computing, Vienna, Austria.
+
+2.  Posit team (2023). RStudio: Integrated Development Environment for R. Posit Software, PBC, Boston, MA. URL http://www.posit.co/
+
+3.  Wickham H, Averick M, Bryan J, Chang W, McGowan LD, François R, Grolemund G, Hayes A, Henry L, Hester J, Kuhn M, Pedersen TL, Miller E, Bache SM, Müller K, Ooms J, Robinson D, Seidel DP, Spinu V, Takahashi K, Vaughan D, Wilke C, Woo K, Yutani H (2019). “Welcome to the tidyverse.” \_Journal of Open Source Software\_, \*4\*(43), 1686. doi:10.21105/joss.01686
+
+4.  Wickham H, François R, Henry L, Müller K, Vaughan D (2023). \_dplyr: A Grammar of Data Manipulation\_. Rpackage version 1.1.4, https://github.com/tidyverse/dplyr
+
+5.  Wickham H, Hester J, Bryan J (2024). \_readr: Read Rectangular Text Data\_. R package version 2.1.5, https://github.com/tidyverse/readr,

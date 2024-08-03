@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.53">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>How does a Bike Share Navigate a Speedy Success</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="Analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">How does a Bike Share Navigate a Speedy Success</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="problem-in-question-maximizing-annual-membership" class="level2">
+<h2 class="anchored" data-anchor-id="problem-in-question-maximizing-annual-membership"><strong>Problem in Question: Maximizing Annual Membership</strong></h2>
+<p>In 2016, Cyclistic launched a successful bike-share offering. Since then, the program has grown to a fleet of 5,824 bicycles that are geotracked and locked into a network of 692 stations across Chicago. The bikes can be unlocked from one station and returned to any other station in the system anytime.</p>
+<p>Cyclistic has two types of customers:</p>
+<ul>
+<li><p>Customers with single ride or full-day passes (Casual Riders)</p></li>
+<li><p>Customers with annual memberships (Annual Membership holders)</p></li>
+</ul>
+<p><strong>Strategy</strong>: Rather than creating a marketing campaign that targets all-new customers, Lily Moreno (marketing manager at Cycliistic) believes there is a very good chance to convert casual riders into members.</p>
+<p><strong>Task to meet the desired goal:</strong></p>
+<ol type="1">
+<li><p>understanding how annual members and casual riders differ</p></li>
+<li><p>why casual riders would buy a membership</p></li>
+<li><p>how digital media could affect their marketing tactics</p></li>
+</ol>
+</section>
+<section id="about-data" class="level2">
+<h2 class="anchored" data-anchor-id="about-data"><strong>About Data</strong></h2>
+<p>For the purpose of this case study, the datasets are appropriate and will enable us to answer the business questions. The data has been made available by Motivate International Inc.</p>
+<p>You can download the data using this link <a href="https://divvy-tripdata.s3.amazonaws.com/index.html">Cyclistic Data</a></p>
+<p>This is a public data that we can use to explore how different customer types are using Cyclistic bikes. But note that data-privacy issues prohibit us from using riders’ personally identifiable information. This means that we won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.</p>
+<p><a href="#tbl-cyclistic-data" class="quarto-xref">Table&nbsp;1</a> depicts the cyclistic data with 13 columns as:</p>
+<ol type="1">
+<li>ride_id</li>
+<li>rideable_type</li>
+<li>started_at (time the ride started at)</li>
+<li>end_at (time the ride finished at)</li>
+<li>start_station_name</li>
+<li>end_station_name</li>
+<li>start_station_id</li>
+<li>end_station_id</li>
+<li>start_lat (latitude coordinated of starting bike location)</li>
+<li>start_lng (longitude coordinated of starting bike location)</li>
+<li>end_lat (latitude coordinated of the final location of bike)</li>
+<li>end_lng (longitude coordinate of the final location of bike)</li>
+<li>member_casual (shows two types of bike users: members and casual)</li>
+</ol>
+<div id="tbl-cyclistic-data" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cyclistic-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Cyclistic Dataset (Quarter 1, 2020)
+</figcaption>
+<div aria-describedby="tbl-cyclistic-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 13
+  ride_id          rideable_type started_at          ended_at           
+  &lt;chr&gt;            &lt;chr&gt;         &lt;dttm&gt;              &lt;dttm&gt;             
+1 EACB19130B0CDA4A docked_bike   2020-01-21 20:06:59 2020-01-21 20:14:30
+2 8FED874C809DC021 docked_bike   2020-01-30 14:22:39 2020-01-30 14:26:22
+3 789F3C21E472CA96 docked_bike   2020-01-09 19:29:26 2020-01-09 19:32:17
+4 C9A388DAC6ABF313 docked_bike   2020-01-06 16:17:07 2020-01-06 16:25:56
+5 943BC3CBECCFD662 docked_bike   2020-01-30 08:37:16 2020-01-30 08:42:48
+6 6D9C8A6938165C11 docked_bike   2020-01-10 12:33:05 2020-01-10 12:37:54
+# ℹ 9 more variables: start_station_name &lt;chr&gt;, start_station_id &lt;dbl&gt;,
+#   end_station_name &lt;chr&gt;, end_station_id &lt;dbl&gt;, start_lat &lt;dbl&gt;,
+#   start_lng &lt;dbl&gt;, end_lat &lt;dbl&gt;, end_lng &lt;dbl&gt;, member_casual &lt;chr&gt;</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</section>
+<section id="preprocessing-and-transforming" class="level2">
+<h2 class="anchored" data-anchor-id="preprocessing-and-transforming"><strong>Preprocessing and Transforming</strong></h2>
+<p>Overall, data seems to be cleaned having columns appropriately named but datatypes for some columns need to be redefined to perform smooth calculations.</p>
+<p>Before continuing with our dataset, lets do some cleaning. Though the cleaning process can be performed in-situ, it is advisable to check for any null enteries or anomaly in the dataset.</p>
+<p>The code chunk below format the column names and data types into appropriately to ease in furthur calculations. Moreover, there were 4 null enteries detected that were removed from the table and the final cleaned table is <a href="#tbl-cleaned" class="quarto-xref">Table&nbsp;2</a>. Also you can observe that data types of different columns has been changed.</p>
+<div class="cell" data-tbl-cap="Cleaned Dataset">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cyclistic_2020_transformed <span class="ot">=</span> cyclistic_2020 <span class="sc">|&gt;</span> <span class="fu">mutate</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">rideable_type =</span> <span class="fu">as.factor</span>(rideable_type),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">member_type =</span> <span class="fu">as.factor</span>(member_casual),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_station_id =</span> <span class="fu">as.numeric</span>(start_station_id),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_station_id =</span> <span class="fu">as.numeric</span>(end_station_id),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_lat =</span> <span class="fu">as.numeric</span>(start_lat),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_lng =</span> <span class="fu">as.numeric</span>(start_lng),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_lat =</span> <span class="fu">as.numeric</span>(end_lat),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_lng =</span> <span class="fu">as.numeric</span>(end_lng),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">start_station_name =</span> <span class="fu">as.character</span>(start_station_name),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">end_station_name =</span> <span class="fu">as.character</span>(end_station_name)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="tbl-cleaned" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cleaned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Cleaned and Transformed Data
+</figcaption>
+<div aria-describedby="tbl-cleaned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cyclistic_2020_transformed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># So, we have found 4 null values - lets get rid of them</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>cleaned_df <span class="ot">=</span> cyclistic_2020_transformed <span class="sc">|&gt;</span> <span class="fu">drop_na</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>cleaned_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 426,886 × 14
+   ride_id          rideable_type started_at          ended_at           
+   &lt;chr&gt;            &lt;fct&gt;         &lt;dttm&gt;              &lt;dttm&gt;             
+ 1 EACB19130B0CDA4A docked_bike   2020-01-21 20:06:59 2020-01-21 20:14:30
+ 2 8FED874C809DC021 docked_bike   2020-01-30 14:22:39 2020-01-30 14:26:22
+ 3 789F3C21E472CA96 docked_bike   2020-01-09 19:29:26 2020-01-09 19:32:17
+ 4 C9A388DAC6ABF313 docked_bike   2020-01-06 16:17:07 2020-01-06 16:25:56
+ 5 943BC3CBECCFD662 docked_bike   2020-01-30 08:37:16 2020-01-30 08:42:48
+ 6 6D9C8A6938165C11 docked_bike   2020-01-10 12:33:05 2020-01-10 12:37:54
+ 7 31EB9B8F406D4C82 docked_bike   2020-01-10 13:07:35 2020-01-10 13:12:24
+ 8 A2B24E3F9C9720E3 docked_bike   2020-01-10 07:24:53 2020-01-10 07:29:50
+ 9 5E3F01E1441730B7 docked_bike   2020-01-31 16:37:16 2020-01-31 16:42:11
+10 19DC57F7E3140131 docked_bike   2020-01-31 09:39:17 2020-01-31 09:42:40
+# ℹ 426,876 more rows
+# ℹ 10 more variables: start_station_name &lt;chr&gt;, start_station_id &lt;dbl&gt;,
+#   end_station_name &lt;chr&gt;, end_station_id &lt;dbl&gt;, start_lat &lt;dbl&gt;,
+#   start_lng &lt;dbl&gt;, end_lat &lt;dbl&gt;, end_lng &lt;dbl&gt;, member_casual &lt;chr&gt;,
+#   member_type &lt;fct&gt;</code></pre>
+</div>
+</div>
+</figure>
+</div>
+</section>
+<section id="analysis" class="level2">
+<h2 class="anchored" data-anchor-id="analysis"><strong>Analysis</strong></h2>
+<section id="calculated-columns" class="level3">
+<h3 class="anchored" data-anchor-id="calculated-columns">Calculated Columns</h3>
+<p>Now, the data has been cleaned and in proper shape, it is time to get insights of it. First of all, tow additional columns (<strong>ride_length and day_of_week</strong>) will be calculated and then further analysis and summary statistics will be acquired using these two columns. Insights from these two columns will help us understand how different members use bikes differntly and how to strategize marketing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>day_mapping <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Monday"</span>, <span class="st">"Tuesday"</span>, <span class="st">"Wednesday"</span>, <span class="st">"Thursday"</span>, <span class="st">"Friday"</span>, <span class="st">"Saturday"</span>, <span class="st">"Sunday"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df_cyclistic <span class="ot">&lt;-</span> cleaned_df <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">ride_length =</span> hms<span class="sc">::</span><span class="fu">as_hms</span>(ended_at <span class="sc">-</span> started_at),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_of_week =</span> day_mapping[<span class="fu">wday</span>(started_at)]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>00:07:31
+00:03:43
+00:02:51
+00:08:49
+00:05:32
+00:04:49</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Wednesday" "Friday"    "Friday"    "Tuesday"   "Friday"    "Saturday" </code></pre>
+</div>
+</div>
+</section>
+<section id="ride-behavior-of-users" class="level3">
+<h3 class="anchored" data-anchor-id="ride-behavior-of-users">Ride Behavior of Users</h3>
+<p>In <a href="#tbl-summary-stat" class="quarto-xref">Table&nbsp;3</a>, It can be clearly observed from the mean (ride_length) for both user types that the avg. ride duration of a member is 12 minutes. On the other hand, the avg. ride time of a casual user is 1 hr 35 min. Surely, members are daily commuters and casual riders would use the bikes for specific purpose.</p>
+<p>Also, casual riders ride duration is surprisingly quite high (2607 hr or 108 days), while the maximum ride duration for member has been recorded is 1563 hr/65 days.</p>
+<div id="tbl-summary-stat" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-summary-stat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Average Ride Length of Users
+</figcaption>
+<div aria-describedby="tbl-summary-stat-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_new <span class="ot">&lt;-</span> df_cyclistic <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(member_casual) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">average_ride_length =</span> <span class="fu">as_hms</span>(<span class="fu">mean</span>(ride_length,)),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_ride_length =</span> <span class="fu">as_hms</span>(<span class="fu">max</span>(ride_length)) <span class="co"># divide by 24 to convert into days</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>df_new</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  member_casual average_ride_length max_ride_length
+  &lt;chr&gt;         &lt;time&gt;              &lt;time&gt;         
+1 casual        01:35:47.077436     2607:30:24     
+2 member        00:12:40.626751     1563:13:31     </code></pre>
+</div>
+</div>
+</figure>
+</div>
+<div id="tbl-weekly" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-weekly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Weekly Ride Trends
+</figcaption>
+<div aria-describedby="tbl-weekly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_m <span class="ot">&lt;-</span> df_cyclistic <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(day_of_week, member_casual) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_ride_length =</span> <span class="fu">as_hms</span>(<span class="fu">mean</span>(ride_length))) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_ride_length))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>df_m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 14 × 3
+# Groups:   day_of_week [7]
+   day_of_week member_casual mean_ride_length
+   &lt;chr&gt;       &lt;chr&gt;         &lt;time&gt;          
+ 1 Friday      casual        02:05:51.576711 
+ 2 Saturday    casual        01:58:18.424424 
+ 3 Sunday      casual        01:40:17.156016 
+ 4 Monday      casual        01:35:10.566505 
+ 5 Wednesday   casual        01:24:38.192439 
+ 6 Thursday    casual        01:14:59.663240 
+ 7 Tuesday     casual        01:13:54.716316 
+ 8 Monday      member        00:15:49.340146 
+ 9 Sunday      member        00:15:29.989237 
+10 Tuesday     member        00:12:58.628587 
+11 Saturday    member        00:12:37.324131 
+12 Thursday    member        00:11:39.536434 
+13 Friday      member        00:11:33.232541 
+14 Wednesday   member        00:11:32.032297 </code></pre>
+</div>
+</div>
+</figure>
+</div>
+<p>Above <a href="#tbl-weekly" class="quarto-xref">Table&nbsp;4</a> illustrates records the longest ride duration for casual riders Thursday and most of riders who have memberships rides longer on Sundays.</p>
+<p>The <a href="#fig-weekly-rides" class="quarto-xref">Figure&nbsp;1</a> illustrates the distinct usage patterns of “Annual Members” and “Casual Riders” of a bike-sharing service across different days of the week. Annual members show a consistent usage pattern during weekdays, peaking on Wednesday, indicating a primary use for commuting and regular weekday activities, with a noticeable drop on Sunday. In contrast, casual riders demonstrate higher activity on weekends, particularly on Saturday, suggesting a preference for leisure or recreational use, with a surprisingly high number on Monday, possibly due to tourists or occasional riders. Both groups show moderate use on Fridays, potentially reflecting a mix of commuting and leisure activities. Overall, annual members consistently outnumber casual riders, highlighting the regularity of their usage compared to the more sporadic patterns of casual riders.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-weekly-rides" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-weekly-rides-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Analysis_files/figure-html/fig-weekly-rides-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-weekly-rides-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: No.&nbsp;of Rides on each day
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>While digging deep into the ride behavior of users, it was observed <a href="#tbl-frequent-rides" class="quarto-xref">Table&nbsp;5</a> that most casual riders start their journey from ‘HQ QR’ station and then back to the same station. On the other, annual members made most of their trips from Canal St &amp; Adams st to Michigan Ave &amp; Washington</p>
+<div id="tbl-frequent-rides" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-frequent-rides-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Most Frequent Rides
+</figcaption>
+<div aria-describedby="tbl-frequent-rides-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+# Groups:   member_casual [2]
+  member_casual trip_route                                          frequency
+  &lt;chr&gt;         &lt;chr&gt;                                                   &lt;int&gt;
+1 casual        HQ QR to HQ QR                                           3764
+2 member        Canal St &amp; Adams St to Michigan Ave &amp; Washington St       451</code></pre>
+</div>
+</div>
+</figure>
+</div>
+<p>Since we need to formulate a marketing strategy for casual riders and annual member, it is mandatory to see what is the size of these users.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-user-proportion" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-user-proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Analysis_files/figure-html/fig-user-proportion-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-user-proportion-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: User Proportions of Cyclistic Members
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>So, we can see that there are 89% (378407) of members subscribed to annual membership of cyclistic. On the other hand there are only 11% (48479) of casual riders we need to convince into subscribing for the memebrship.</p>
+</section>
+</section>
+<section id="results-and-discussions" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussions">Results and Discussions</h2>
+<p><strong>Queastion 1: How casual riders use bikes differently from the members?</strong></p>
+<ol type="1">
+<li><p>It can be clearly observed from the <strong>mean (ride_length)</strong> for both user types that the avg. ride duration of a member is <strong>12 minutes</strong>. On the other hand, the avg. ride time of a casual user is <strong>1 hr 35 min</strong>.</p></li>
+<li><p>Also, among the riders <strong>who use the cyclistic the most</strong> are casual riders with ride duration spanning <strong>over days</strong>. Among <strong>first 50 users</strong> who use the bikes more are casual riders.</p></li>
+<li><p>The <strong>longest ride duration</strong> for casual riders are recorded on <strong>Thursday</strong>, while most of riders who have memberships rides longer on <strong>Sundays</strong>.</p></li>
+<li><p>Saturday has the highest number of riders among casual riders, they might be using bikes for leisure activities. Monday shows a surprisingly high number of casual riders. Annual members are consistent throughought the week.</p></li>
+<li><p>There is no significant difference between the <strong>average distance</strong> travelled by each category, but casual riders are taking the lead here, too, by approx. 1 Km.</p></li>
+<li><p>It has been observed that the <strong>HQ QR Station</strong> was prominent among casual riders; about 3% (3764) of casual riders commute daily to and from this particular station. Annual members made most of their trips from <strong>Canal St &amp; Adams st to Michigan Ave &amp; Washington</strong>.</p></li>
+</ol>
+<p><strong>Question 2: Why would a casual rider convert to a member?</strong></p>
+<ol type="1">
+<li><p><strong>Casual riders</strong> are just 11% of the total cyclistic users, yet they still ride more than the annual members; their <strong>avg. ride duaration is 8 times</strong> the avg. ride duration of membership holders. They are likely to buy the membership as per their frequecy of using bikes.</p></li>
+<li><p>The <strong>ride length</strong> of a casual rider (at least first 50) spans over days with largest being <strong>108 days</strong>. They must be using <strong>full-day passes</strong>. One strategy to convert them into regular member is <strong>put a cap on ride duration</strong> for casual users for a day. To use the bike above this limit, they have to buy membership.</p></li>
+<li><p>Most of the casual riders ride on Sunday. Company can provide <strong>incentives or discounts</strong> to regular members specifically on Sunday to allure the casual rider into buying membership. They will buy the membership for they are the ones who use bike the most on Sunday.</p></li>
+<li><p>Lastly, it is observed that approx. 3% of the casual riders use the HQ QR station for daily commute. Cyclistic can target these specfic users <strong>offering them special offers</strong>.</p></li>
+</ol>
+</section>
+<section id="action-marketing-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="action-marketing-strategy">Action: Marketing Strategy</h2>
+<p><strong>Question 3: Digital marketing strategy raise annual subscriptions?</strong></p>
+<p>To convert existing casual riders, Cyclistic need to initialize a specific remarketing campaign tailored for casual riders only.</p>
+<ul>
+<li><p>First of all, the new <strong>awareness campaign</strong> should be launched via <strong>e-mails</strong>, <strong>personal messages</strong>, and <strong>social media</strong> informing the casual riders of benefits of being an annual members.</p></li>
+<li><p>Create <strong>attractive ads</strong> to post on social media listing <strong>offers and incentives</strong> if they convert into members.</p></li>
+<li><p>Second, inform the casual riders about the limit company is going to apply on time duration on full-day passes with invitation for them to subsribing into membership in order to <strong>ride unlimited</strong>.</p></li>
+<li><p><strong>Promotions and incentives</strong> campaign specifically for riders who rides on Sunday. <strong>Discounts for annual members on Sunday</strong> to convince casual riders into having a membership.</p></li>
+<li><p>Focus marketing efforts for annual memberships during weekdays and highlight commuting benefits. Encourage casual riders with weekend promotions.</p></li>
+<li><p>Allocate more resources, such as bike availability and maintenance, on Wednesdays and weekends to meet demand peaks.</p></li>
+<li><p>Lastly, prepare a <strong>detailed list of casual commuters who use HQ QR station</strong> the most. Approach them with deals to convert them into members as they are already regular commuters.</p></li>
+</ul>
+<p>It is all remarketing campaign to make casual users aware of what perks they can enjoy if they get permoted to annual members. Moreover, marketing strategy need to be shifted from general awareness campaign to more specific.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
